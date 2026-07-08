@@ -11,11 +11,11 @@
        ║         🎨  DESIGN TOKENS — matches index.html exactly        ║
        ╚══════════════════════════════════════════════════════════════╝ */
     :root {
-      --bg:        #f5f4f0;
+      --bg:        #f2f5f0;
       --ink:       #1a1a18;
-      --muted:     #888880;
-      --accent:    #c8b89a;
-      --card-bg:   #e8e6e0;
+      --muted:     #808883;
+      --accent:    #029e24;
+      --card-bg:   #e0e8e1;
       --radius:    2px;
       --display:   'Helvetica Neue', HelveticaNeue, Helvetica, Arial, sans-serif;
       --sans:      -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
@@ -103,10 +103,10 @@
     }
     @media (max-width: 600px) { .resume-grid { grid-template-columns: 1fr; } }
 
+    /* ✏️ YOUR EDITS HERE — this card is now background-free by design.
+       If you ever want the boxed/shaded look back, re-add:
+       background: var(--card-bg); padding: clamp(28px, 4vw, 44px); */
     .resume-card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      padding: clamp(28px, 4vw, 44px);
       display: flex;
       flex-direction: column;
       gap: 20px;
@@ -117,12 +117,52 @@
     .resume-card:nth-child(1) { animation-delay: 0.12s; }
     .resume-card:nth-child(2) { animation-delay: 0.20s; }
 
-    .resume-card-label {
-      font-size: 0.62rem;
-      font-weight: 500;
-      letter-spacing: 0.14em;
+    /* ── RESUME THUMBNAIL (the actual page image, 4:5 portrait) ── */
+    .resume-thumb {
+      display: block;
+      aspect-ratio: 4 / 5;
+      width: 100%;
+      max-width: 260px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+      background: #ffffff;
+      border: 1px solid rgba(26,26,24,0.10);
+      align-self: flex-start;
+    }
+    .resume-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s var(--transition);
+    }
+    .resume-thumb:hover img { transform: scale(1.03); }
+
+    /* Placeholder shown until you add a real image — see YOUR EDITS HERE below */
+    .resume-thumb-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      line-height: 1.5;
+    }
+
+    /* Small "click to view/download" hint under the thumbnail */
+    .resume-thumb-hint {
+      margin-top: 10px;
+      font-size: 0.66rem;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--muted);
+      text-align: center;
     }
 
     .resume-card h2 {
@@ -176,21 +216,6 @@
     }
     .resume-download:hover svg { transform: translateY(2px); }
 
-    /* Preview notice */
-    .preview-note {
-      margin-top: clamp(32px, 5vw, 52px);
-      font-size: 0.72rem;
-      color: var(--muted);
-      letter-spacing: 0.04em;
-      opacity: 0;
-      animation: fadeUp 0.5s 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    }
-    .preview-note a {
-      border-bottom: 1px solid var(--accent);
-      padding-bottom: 1px;
-    }
-    .preview-note a:hover { color: var(--ink); }
-
     /* ── FOOTER ─────────────────────────────────────────────── */
     footer {
       border-top: 1px solid rgba(26,26,24,0.10);
@@ -216,7 +241,6 @@
     <div class="nav-links">
       <a href="index.html">Work</a>
       <a href="resume.html" class="active">Resume</a>
-      <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
     </div>
   </nav>
@@ -225,18 +249,44 @@
 
     <div class="page-header">
       <h1>Resume</h1>
-      <p>Two versions — one with visual appeal, one optimised for applicant tracking systems.</p>
     </div>
 
     <div class="resume-grid">
 
-      <!-- ✏️ DESIGNED RESUME — replace href with your actual PDF path -->
+      <!-- ══════════════════════════════════════════════════════
+           ✏️ YOUR EDITS HERE — DESIGNED RESUME (Version 01)
+
+           TO MAKE THIS DOWNLOAD YOUR REAL PDF:
+           1. In VS Code, drop your PDF file into the `resumes/`
+              folder (create the folder next to index.html if it
+              doesn't exist yet).
+           2. Name the file exactly:  resume-designed.pdf
+              (or rename it to whatever you like, just make sure
+              BOTH href="resumes/resume-designed.pdf" attributes
+              below match the real filename — there are two,
+              one on the image link and one on the button).
+           3. That's it — no other code changes needed. Clicking
+              EITHER the image or the "Download PDF" button
+              triggers a real file download, because both are
+              <a> tags pointing at the same PDF with a `download`
+              attribute already built in.
+           4. Image: swap the img src below for a screenshot/export
+              of the PDF's first page (roughly 4:5 portrait,
+              e.g. 1000 x 1250px) so the thumbnail matches.
+           ══════════════════════════════════════════════════════ -->
       <div class="resume-card">
-        <div class="resume-card-label">Version 01</div>
+
+        <!-- Click the image itself to download the PDF -->
+        <a class="resume-thumb" href="resumes/resume-designed.pdf" download="Josh-Newman-Designed-Resume.pdf">
+          <!-- ✏️ Replace this img src with your resume image -->
+          <img src="images/res1.png" alt="Designed resume preview" loading="lazy"
+               onerror="this.parentElement.innerHTML='<div class=\'resume-thumb-placeholder\'>Add image at<br>images/resume-designed.jpg</div>'" />
+        </a>
+
         <h2>Designed<br />Resume</h2>
-        <div class="resume-card-divider"></div>
-        <p>Typeset and laid out by hand. Intended for humans — recruiters, creative directors, hiring managers who will actually read it.</p>
-        <a class="resume-download" href="resumes/resume-designed.pdf" target="_blank" download>
+
+        <!-- ✏️ Same PDF path as the image link above — keep both in sync -->
+        <a class="resume-download" href="resumes/resume-designed.pdf" download="Josh-Newman-Designed-Resume.pdf">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
@@ -246,13 +296,23 @@
         </a>
       </div>
 
-      <!-- ✏️ ATS RESUME — replace href with your actual PDF path -->
+      <!-- ══════════════════════════════════════════════════════
+           ✏️ YOUR EDITS HERE — ATS RESUME (Version 02)
+           Same steps as above — drop this one in as
+           resumes/resume-ats.pdf
+           ══════════════════════════════════════════════════════ -->
       <div class="resume-card">
-        <div class="resume-card-label">Version 02</div>
+
+        <a class="resume-thumb" href="resumes/resume-ats.pdf" download="Josh-Newman-ATS-Resume.pdf">
+          <!-- ✏️ Replace this img src with your resume image -->
+          <img src="images/res2.png" alt="ATS-friendly resume preview" loading="lazy"
+               onerror="this.parentElement.innerHTML='<div class=\'resume-thumb-placeholder\'>Add image at<br>images/resume-ats.jpg</div>'" />
+        </a>
+
         <h2>ATS-Friendly<br />Resume</h2>
-        <div class="resume-card-divider"></div>
-        <p>Plain structure, standard fonts, no columns or graphics. Built to pass through automated screening software without losing a word.</p>
-        <a class="resume-download" href="resumes/resume-ats.pdf" target="_blank" download>
+
+        <!-- ✏️ Same PDF path as the image link above — keep both in sync -->
+        <a class="resume-download" href="resumes/resume-ats.pdf" download="Josh-Newman-ATS-Resume.pdf">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
@@ -264,21 +324,14 @@
 
     </div>
 
-    <!-- ✏️ Optional: swap the mailto for a LinkedIn or Calendly link -->
-    <p class="preview-note">
-      Questions about my background? <a href="mailto:you@email.com">Get in touch directly.</a>
-    </p>
-
   </div>
 
   <footer>
-    <span>© 2026 Your Name</span>
+    <span>© 2026 Josh Newman</span>
     <span>
-      <a href="mailto:you@email.com">you@email.com</a>
+      <a href="https://www.linkedin.com/in/joshlowenewman/" target="_blank">LinkedIn</a>
       &nbsp;·&nbsp;
-      <a href="https://linkedin.com/in/yourhandle" target="_blank">LinkedIn</a>
-      &nbsp;·&nbsp;
-      <a href="https://github.com/yourhandle" target="_blank">GitHub</a>
+      <a href="https://github.com/joshualowenewman-code" target="_blank">GitHub</a>
     </span>
   </footer>
 

@@ -10,11 +10,11 @@
        ║         🎨  DESIGN TOKENS — keep in sync with index.html     ║
        ╚══════════════════════════════════════════════════════════════╝ */
     :root {
-      --bg:        #f5f4f0;
+      --bg:        #f2f5f0;
       --ink:       #1a1a18;
-      --muted:     #888880;
-      --accent:    #c8b89a;
-      --card-bg:   #e8e6e0;
+      --muted:     #808883;
+      --accent:    #029e24;
+      --card-bg:   #e0e8e1;
       --radius:    2px;
       --display:   'Helvetica Neue', HelveticaNeue, Helvetica, Arial, sans-serif;
       --sans:      -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
@@ -153,11 +153,29 @@
       flex-shrink: 0;
       opacity: 0;
       transform: translateX(-6px);
-      transition: opacity 0.2s, transform 0.2s;
+      transition: opacity 0.2s, transform 0.2s, color 0.2s;
     }
     .contact-row:hover .contact-arrow {
       opacity: 1;
       transform: none;
+    }
+
+    /* ── COPY-TO-CLIPBOARD ROWS (email / phone) ────────────── */
+    button.contact-row {
+      background: none;
+      border: none;
+      border-top: 1px solid rgba(26,26,24,0.10);
+      width: 100%;
+      font: inherit;
+      letter-spacing: inherit;
+      color: inherit;
+      cursor: pointer;
+      text-align: left;
+    }
+    .contact-row.row-copied .contact-arrow {
+      opacity: 1;
+      transform: none;
+      color: var(--accent);
     }
 
     /* ── FOOTER ──────────────────────────────────────────────── */
@@ -185,7 +203,6 @@
     <div class="nav-links">
       <a href="index.html">Work</a>
       <a href="resume.html">Resume</a>
-      <a href="about.html">About</a>
       <a href="contact.html" class="active">Contact</a>
     </div>
   </nav>
@@ -194,37 +211,33 @@
 
     <div class="page-header animate">
       <h1>Contact</h1>
-      <!-- ✏️ Optional one-liner. Can remove entirely if you prefer just the list. -->
-      <p class="intro">The best way to reach me is email. I'm always open to new projects, collaborations, and conversations.</p>
     </div>
 
     <div class="contact-list">
 
-      <!-- ✏️ Replace each href and display text with your real info -->
+      <!-- ✏️ Email & Phone copy their value to the clipboard on click.
+           LinkedIn is the only row that actually navigates. -->
 
-      <a class="contact-row" href="mailto:you@email.com">
+      <button type="button" class="contact-row" data-copy="new21012@byui.edu">
         <span class="contact-label">Email</span>
-        <span class="contact-value">you@email.com</span>
+        <span class="contact-value">new21012@byui.edu</span>
+        <span class="contact-arrow">Copy</span>
+      </button>
+
+      <!-- ✏️ Replace href/text if your LinkedIn handle changes -->
+      <a class="contact-row" href="https://www.linkedin.com/in/joshlowenewman/" target="_blank">
+        <span class="contact-label">LinkedIn</span>
+        <span class="contact-value">linkedin.com/in/joshlowenewman</span>
         <span class="contact-arrow">↗</span>
       </a>
 
-      <a class="contact-row" href="https://yourwebsite.com" target="_blank">
-        <span class="contact-label">Website</span>
-        <span class="contact-value">yourwebsite.com</span>
-        <span class="contact-arrow">↗</span>
-      </a>
-
-      <a class="contact-row" href="tel:+12085550000">
+      <button type="button" class="contact-row" data-copy="+1 (801) 674-1970">
         <span class="contact-label">Phone</span>
-        <span class="contact-value">+1 (208) 555-0000</span>
-        <span class="contact-arrow">↗</span>
-      </a>
+        <span class="contact-value">+1 (801) 674-1970</span>
+        <span class="contact-arrow">Copy</span>
+      </button>
 
-      <a class="contact-row" href="https://instagram.com/yourhandle" target="_blank">
-        <span class="contact-label">Instagram</span>
-        <span class="contact-value">@yourhandle</span>
-        <span class="contact-arrow">↗</span>
-      </a>
+      
 
     </div>
 
@@ -233,13 +246,44 @@
   <footer>
     <span>© 2026 Your Name</span>
     <span>
-      <a href="mailto:you@email.com">you@email.com</a>
+      <a href="https://www.linkedin.com/in/joshlowenewman/" target="_blank">LinkedIn</a>
       &nbsp;·&nbsp;
-      <a href="https://linkedin.com/in/yourhandle" target="_blank">LinkedIn</a>
-      &nbsp;·&nbsp;
-      <a href="https://github.com/yourhandle" target="_blank">GitHub</a>
+      <a href="https://github.com/joshualowenewman-code" target="_blank">GitHub</a>
     </span>
   </footer>
+
+  <script>
+    // Email & Phone rows: copy value to clipboard and show a "Copied" signifier
+    document.querySelectorAll('.contact-row[data-copy]').forEach(row => {
+      const indicator = row.querySelector('.contact-arrow');
+      const defaultText = indicator.textContent;
+      let revertTimeout;
+
+      row.addEventListener('click', async () => {
+        const value = row.dataset.copy;
+        try {
+          await navigator.clipboard.writeText(value);
+        } catch (err) {
+          // Fallback for browsers without Clipboard API permission
+          const temp = document.createElement('textarea');
+          temp.value = value;
+          document.body.appendChild(temp);
+          temp.select();
+          document.execCommand('copy');
+          document.body.removeChild(temp);
+        }
+
+        indicator.textContent = 'Copied ✓';
+        row.classList.add('row-copied');
+
+        clearTimeout(revertTimeout);
+        revertTimeout = setTimeout(() => {
+          indicator.textContent = defaultText;
+          row.classList.remove('row-copied');
+        }, 1500);
+      });
+    });
+  </script>
 
 </body>
 </html>
